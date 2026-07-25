@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>오영수 — 백엔드 엔지니어</title>
+<meta name="description" content="7년차 Java·Spring Boot 백엔드 엔지니어 오영수의 포트폴리오. 레거시 리빌드, 결제·인증 연동, 운영 시스템화 사례.">
+<style>
+  /* ---------- Tokens ---------- */
+  :root {
+    --paper: #EDF1F5;
+    --surface: #FFFFFF;
+    --surface-2: #F5F8FA;
+    --ink: #12181F;
+    --ink-soft: #52606D;
+    --ink-faint: #8492A0;
+    --line: #C7D0D9;
+    --grid: rgba(18,24,31,0.045);
+    --accent: #B4552B;
+    --accent-ink: #FFFFFF;
+    --good: #2F7D45;
+    --good-bg: rgba(47,125,69,0.09);
+    --radius: 3px;
+    --font-display: 'Charter','Iowan Old Style','Palatino Linotype',Georgia,serif;
+    --font-mono: 'SF Mono','Cascadia Code','JetBrains Mono',Menlo,Consolas,monospace;
+    --font-sans: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    --max-w: 760px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper:#0B0F14; --surface:#131A22; --surface-2:#0F151C;
+      --ink:#E8EDF2; --ink-soft:#93A1AF; --ink-faint:#5C6B79;
+      --line:#26313D; --grid: rgba(232,237,242,0.04);
+      --accent:#E08850; --accent-ink:#0B0F14;
+      --good:#5FBB68; --good-bg: rgba(95,187,104,0.12);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper:#0B0F14; --surface:#131A22; --surface-2:#0F151C;
+    --ink:#E8EDF2; --ink-soft:#93A1AF; --ink-faint:#5C6B79;
+    --line:#26313D; --grid: rgba(232,237,242,0.04);
+    --accent:#E08850; --accent-ink:#0B0F14;
+    --good:#5FBB68; --good-bg: rgba(95,187,104,0.12);
+  }
+  :root[data-theme="light"] {
+    --paper: #EDF1F5; --surface: #FFFFFF; --surface-2: #F5F8FA;
+    --ink: #12181F; --ink-soft: #52606D; --ink-faint: #8492A0;
+    --line: #C7D0D9; --grid: rgba(18,24,31,0.045);
+    --accent: #B4552B; --accent-ink: #FFFFFF;
+    --good: #2F7D45; --good-bg: rgba(47,125,69,0.09);
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background-color: var(--paper);
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 40px 40px;
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+  ::selection { background: var(--accent); color: var(--accent-ink); }
+
+  .wrap {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 64px 24px 96px;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 10px;
+  }
+
+  h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; color: var(--ink); }
+  h1 { font-size: clamp(2.1rem, 5vw, 2.9rem); font-weight: 700; letter-spacing: -0.01em; }
+  h2 { font-size: clamp(1.4rem, 3vw, 1.7rem); font-weight: 700; }
+  h3 { font-size: 1.1rem; font-weight: 700; }
+  p { margin: 0; text-wrap: pretty; }
+
+  /* ---------- Hero ---------- */
+  .hero { position: relative; padding-bottom: 40px; border-bottom: 1px solid var(--line); }
+  .hero-role {
+    font-family: var(--font-mono);
+    color: var(--ink-soft);
+    font-size: 14px;
+    margin-top: 10px;
+  }
+  .hero-role .sep { color: var(--ink-faint); margin: 0 6px; }
+  .hero-summary {
+    margin-top: 22px;
+    max-width: 62ch;
+    color: var(--ink-soft);
+    font-size: 1.02rem;
+    line-height: 1.75;
+  }
+  .contact-row {
+    display: flex; flex-wrap: wrap; gap: 18px;
+    margin-top: 24px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+  }
+  .contact-row a { color: var(--ink); border-bottom: 1px solid var(--line); padding-bottom: 1px; }
+  .contact-row a:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+
+  .stat-grid {
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+  .stat {
+    background: var(--surface);
+    padding: 18px 16px;
+  }
+  .stat .num {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--good);
+    background: var(--good-bg);
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: var(--radius);
+  }
+  .stat .desc { margin-top: 8px; font-size: 13px; color: var(--ink-soft); line-height: 1.5; }
+  .stat .src { margin-top: 8px; font-family: var(--font-mono); font-size: 11px; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.04em; }
+
+  /* ---------- Sections ---------- */
+  section { margin-top: 72px; }
+  .section-head { margin-bottom: 28px; }
+  .section-head h2 { margin-top: 6px; }
+
+  /* ---------- Case study card ---------- */
+  .case {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    position: relative;
+  }
+  .case::before, .case::after,
+  .case-inner::before, .case-inner::after {
+    content: "";
+    position: absolute;
+    width: 9px; height: 9px;
+    border-color: var(--accent);
+    border-style: solid;
+  }
+  .case::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+  .case::after { top: -1px; right: -1px; border-width: 2px 2px 0 0; }
+  .case-inner { position: relative; padding: 32px; }
+  .case-inner::before { bottom: -1px; left: -1px; border-width: 0 0 2px 2px; }
+  .case-inner::after { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+
+  .case-meta {
+    display: flex; flex-wrap: wrap; gap: 6px 14px;
+    font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-soft);
+    margin-top: 14px; padding-bottom: 22px; border-bottom: 1px dashed var(--line);
+  }
+  .case-meta b { color: var(--ink); font-weight: 600; }
+
+  .case h4 {
+    font-family: var(--font-mono);
+    font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-faint); font-weight: 600; margin: 30px 0 12px;
+  }
+  .case h4:first-of-type { margin-top: 26px; }
+  .case p.body, .case ul { color: var(--ink-soft); font-size: 15px; line-height: 1.75; }
+  .case ul { margin: 0; padding-left: 1.15em; }
+  .case li + li { margin-top: 8px; }
+  .case li b, .case p b { color: var(--ink); font-weight: 600; }
+
+  /* ---------- Architecture diagram ---------- */
+  .diagram { margin-top: 6px; }
+  .diagram .tier-label {
+    font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.08em;
+    color: var(--ink-faint); text-transform: uppercase; margin-bottom: 8px;
+  }
+  .tier { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .node {
+    border: 1px solid var(--line);
+    background: var(--surface-2);
+    padding: 12px 12px;
+  }
+  .node .name { font-family: var(--font-mono); font-size: 12.5px; font-weight: 700; color: var(--ink); }
+  .node .fn { margin-top: 5px; font-size: 12px; color: var(--ink-soft); line-height: 1.5; }
+  .connector { display: flex; justify-content: center; margin: 4px 0; }
+  .connector .stem { width: 1px; height: 22px; background: var(--line); }
+  .infra-band {
+    border: 1px dashed var(--line);
+    padding: 16px;
+    margin-top: 4px;
+  }
+  .infra-band .tier-label { margin-bottom: 12px; }
+
+  /* ---------- Tech tags ---------- */
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+  .tag {
+    font-family: var(--font-mono); font-size: 12px;
+    color: var(--ink-soft); border: 1px solid var(--line);
+    padding: 4px 9px; border-radius: var(--radius);
+    background: var(--surface-2);
+  }
+
+  /* ---------- Secondary case ---------- */
+  .case.secondary .case-inner { padding: 26px 32px; }
+
+  /* ---------- Timeline ---------- */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: ""; position: absolute; left: 4px; top: 6px; bottom: 6px;
+    width: 1px; background: var(--line);
+  }
+  .tnode { position: relative; padding-bottom: 40px; }
+  .tnode:last-child { padding-bottom: 0; }
+  .tnode::before {
+    content: ""; position: absolute; left: -28px; top: 5px;
+    width: 9px; height: 9px; background: var(--paper);
+    border: 2px solid var(--accent); border-radius: 50%;
+  }
+  .tnode .period { font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); }
+  .tnode h3 { margin-top: 6px; }
+  .tnode .role { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-soft); margin-top: 3px; }
+  .tnode .summary { margin-top: 10px; font-size: 14.5px; color: var(--ink-soft); line-height: 1.7; max-width: 60ch; }
+  .tnode .tags { margin-top: 12px; }
+  .tnode .jump {
+    margin-top: 10px; display: inline-block;
+    font-family: var(--font-mono); font-size: 12px;
+  }
+
+  /* ---------- Skills ---------- */
+  .skill-groups { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px 32px; }
+  .skill-group .label {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--ink-faint); margin-bottom: 10px;
+  }
+  .skill-group .tags { margin-top: 0; }
+
+  /* ---------- Education ---------- */
+  .edu-item { display: flex; justify-content: space-between; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+  .edu-item:last-child { border-bottom: none; }
+  .edu-item .school { font-weight: 600; font-family: var(--font-display); font-size: 1.05rem; }
+  .edu-item .degree { font-size: 13.5px; color: var(--ink-soft); margin-top: 4px; }
+  .edu-item .period { font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); white-space: nowrap; }
+
+  /* ---------- Footer ---------- */
+  footer {
+    margin-top: 88px; padding-top: 28px; border-top: 1px solid var(--line);
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+    font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-faint);
+  }
+  footer a { color: var(--ink-soft); }
+
+  @media (max-width: 640px) {
+    .wrap { padding: 44px 18px 72px; }
+    .stat-grid { grid-template-columns: repeat(2, 1fr); }
+    .tier { grid-template-columns: 1fr; }
+    .skill-groups { grid-template-columns: 1fr; }
+    .case-inner { padding: 22px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <p class="eyebrow">Backend Engineer</p>
+    <h1>오영수</h1>
+    <p class="hero-role">Java · Spring Boot<span class="sep">/</span>7년차<span class="sep">/</span>레거시 리빌드 · 결제·인증 연동 · 운영 시스템화</p>
+    <p class="hero-summary">
+      7년차 Java·Spring 기반 백엔드 개발자로, 보험·결제 플랫폼의 레거시 리빌드와 운영 구조 개선을 수행해왔습니다.
+      외주 PHP 기반 플랫폼을 Spring Boot로 전면 리빌드하며 API·DB·백오피스 구조를 재설계했고,
+      개발자 의존적이던 운영 병목을 시스템화해 수작업 기반 운영 이슈를 제거했습니다.
+      결제·실명인증·외부 기관 연동에서는 Webhook 기반 비동기 처리와 캐싱 전략을 설계해
+      중복 처리와 불필요한 외부 호출을 방지하는 데 강점이 있습니다.
+    </p>
+    <div class="contact-row">
+      <a href="mailto:oh.youngsoo23@gmail.com">oh.youngsoo23@gmail.com</a>
+      <a href="https://github.com/youngsoo23" target="_blank" rel="noopener">github.com/youngsoo23</a>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat">
+        <span class="num">-50%</span>
+        <p class="desc">Slack 장애 알림 자동화로 반복 CS 인입 감소</p>
+        <p class="src">Toggle 3.0 · 오픈플랜</p>
+      </div>
+      <div class="stat">
+        <span class="num">-40%</span>
+        <p class="desc">실명인증 모듈 통합 및 중복요청 방지로 호출 비용 절감</p>
+        <p class="src">Toggle 3.0 · 오픈플랜</p>
+      </div>
+      <div class="stat">
+        <span class="num">-30%</span>
+        <p class="desc">Redis Cache-Aside 적용으로 조회 API 응답 지연 개선</p>
+        <p class="src">Global MVP · 오픈플랜</p>
+      </div>
+      <div class="stat">
+        <span class="num">10~20건 → 0</span>
+        <p class="desc">백오피스 시스템화로 일 평균 수작업 운영 이슈 제거</p>
+        <p class="src">Toggle 3.0 · 오픈플랜</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== Featured case study ===== -->
+  <section id="case-toggle">
+    <div class="section-head">
+      <p class="eyebrow">Case Study — 01</p>
+      <h2>Toggle 3.0: 레거시 PHP를 Spring Boot로 전면 리빌드</h2>
+    </div>
+
+    <div class="case">
+      <div class="case-inner">
+        <div class="case-meta">
+          <span><b>회사</b> 오픈플랜주식회사</span>
+          <span><b>역할</b> 백엔드 매니저</span>
+          <span><b>기간</b> 2022.11 – 2025.06</span>
+          <span><b>도메인</b> 여행자보험 플랫폼</span>
+        </div>
+
+        <h4>문제</h4>
+        <p class="body">
+          외주 PHP 기반으로 만들어진 레거시 보험 플랫폼(토글 1.0)은 신규 기능 개발조차 어려운 상태였습니다.
+          운영도 개발자 의존적이어서, 상품·계약·고객 정보를 바꾸는 단순 작업까지 하루 평균
+          <b>10~20건</b>씩 개발자 수작업으로 처리되고 있었습니다.
+        </p>
+
+        <h4>설계</h4>
+        <p class="body">
+          사용자 서비스·운영 백오피스·파트너 백오피스 3개 축으로 플랫폼을 재설계하고,
+          세 서비스가 공통으로 쓰는 결제·인증·알림 기능은 별도의 인프라 레이어로 분리했습니다.
+          외부 기관 연동을 한 곳에 모아 장애·비용 리스크를 격리하는 것이 핵심 판단이었습니다.
+        </p>
+
+        <div class="diagram">
+          <p class="tier-label">서비스 레이어</p>
+          <div class="tier">
+            <div class="node">
+              <div class="name">사용자 서비스</div>
+              <div class="fn">보험 가입·결제 플로우, B2B2C(BBC) 플로우, 포인트 적립</div>
+            </div>
+            <div class="node">
+              <div class="name">운영 백오피스</div>
+              <div class="fn">상품·마케팅·고객·계약·제휴사 관리</div>
+            </div>
+            <div class="node">
+              <div class="name">파트너 백오피스</div>
+              <div class="fn">제휴사 직접 가입, 그룹 보험 플로우, 계약 관리</div>
+            </div>
+          </div>
+          <div class="connector"><div class="stem"></div></div>
+          <div class="infra-band">
+            <p class="tier-label">공통 플랫폼 · 인프라 레이어 (장애·비용 리스크 격리)</p>
+            <div class="tier">
+              <div class="node">
+                <div class="name">Payment</div>
+                <div class="fn">PortOne(IMPort) 연동, 승인·취소·환불, Webhook 상태 동기화</div>
+              </div>
+              <div class="node">
+                <div class="name">Internal</div>
+                <div class="fn">KCB·NICE 실명인증, 중복 요청 방지 로직</div>
+              </div>
+              <div class="node">
+                <div class="name">Notification</div>
+                <div class="fn">Naver Cloud 기반 SMS·알림톡·이메일 발송</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h4>핵심 결정</h4>
+        <ul>
+          <li><b>결제 상태를 Webhook으로 비동기 동기화.</b> PG 응답을 동기적으로 기다리지 않고, Webhook 수신 시점에 결제 상태를 반영해 사용자 서비스와 백오피스 양쪽에서 결제 도메인을 일관되게 유지했습니다.</li>
+          <li><b>실명인증을 Internal 서비스로 집약.</b> KCB·NICE 호출을 한 곳에 모으고 중복 요청 방지 로직을 넣어, 외부 기관 장애가 서비스 전체로 번지지 않도록 분리했습니다.</li>
+          <li><b>JPA + QueryDSL로 ORM 일관화.</b> 레거시 PHP의 산발적인 쿼리 구조를 걷어내고, Liquibase로 스키마 변경 이력을 관리해 쿼리 복잡도와 유지보수 비용을 낮췄습니다.</li>
+        </ul>
+
+        <h4>성과</h4>
+        <ul>
+          <li>백오피스 구축으로 하루 평균 10~20건의 운영 수작업 요청 제거, 개발자 개입 없이 운영 가능한 구조로 전환</li>
+          <li>실명인증 호출을 공통 모듈로 통합해 인증 호출 비용 약 40% 절감</li>
+          <li>Slack 기반 장애 알림 자동화로 선제 대응 체계를 마련, 반복 CS 인입 약 50% 감소</li>
+        </ul>
+
+        <div class="tags">
+          <span class="tag">Java</span><span class="tag">Spring Boot 3.3.x</span><span class="tag">JPA</span>
+          <span class="tag">QueryDSL</span><span class="tag">Liquibase</span><span class="tag">Redis</span>
+          <span class="tag">Docker</span><span class="tag">Jenkins</span><span class="tag">MySQL</span><span class="tag">Thymeleaf</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Secondary case study ===== -->
+  <section id="case-mvp">
+    <div class="section-head">
+      <p class="eyebrow">Case Study — 02</p>
+      <h2>Global MVP: Stripe·해외 보험사 API 연동으로 2개월 내 런칭</h2>
+    </div>
+
+    <div class="case secondary">
+      <div class="case-inner">
+        <div class="case-meta">
+          <span><b>회사</b> 오픈플랜주식회사</span>
+          <span><b>역할</b> 백엔드 매니저</span>
+          <span><b>기간</b> 2025.05 – 2025.09</span>
+          <span><b>도메인</b> 해외 여행자보험 (싱가포르)</span>
+        </div>
+
+        <h4>맥락</h4>
+        <p class="body">
+          Stripe 결제와 Starr 보험사 API 연동을 중심으로 한 신규 글로벌 플랫폼이었습니다.
+          MSA로 설계하는 대신, 해외 시장 반응을 빠르게 검증하기 위해 MVP 형태로 약 <b>2개월 내</b> 개발·런칭을 완료했습니다.
+        </p>
+
+        <h4>핵심 결정</h4>
+        <ul>
+          <li><b>Idempotency key 기반 요청 제어.</b> Stripe PaymentIntent와 Starr 보험사 API(견적→심사→증권 발급) 통합 과정에서 idempotency key와 Webhook 비동기 검증 로직을 직접 설계해 중복 결제와 데이터 불일치를 해결했습니다.</li>
+          <li><b>Redis Cache-Aside로 반복 조회 제거.</b> 국가·상품 조회 API의 DB 반복 호출을 캐싱으로 없애 동일 조건 기준 응답 지연을 약 30% 개선했습니다.</li>
+          <li><b>Slack Webhook 기반 장애 사전 탐지.</b> 주요 API 지연·오류를 실시간으로 감지해 운영팀이 문제 발생 직후 대응할 수 있는 체계를 확보했습니다.</li>
+        </ul>
+
+        <div class="tags">
+          <span class="tag">Java 21</span><span class="tag">Spring Boot 3.3.x</span><span class="tag">JPA</span>
+          <span class="tag">RestClient</span><span class="tag">Redis</span><span class="tag">Docker</span>
+          <span class="tag">Stripe API</span><span class="tag">Starr API</span><span class="tag">MySQL</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Timeline ===== -->
+  <section id="career">
+    <div class="section-head">
+      <p class="eyebrow">Career</p>
+      <h2>경력 — 6년 7개월</h2>
+    </div>
+
+    <div class="timeline">
+      <div class="tnode">
+        <p class="period">2026.02 – 2026.05 · 4개월</p>
+        <h3>주식회사 아치서울</h3>
+        <p class="role">백엔드 파트장 · Qbile Backoffice (차세대 기기 관리)</p>
+        <p class="summary">
+          Spring Security·JWT 기반 관리자 인증/인가 시스템 구축, ADMIN/CS/EXTERNAL 권한별 접근 제어,
+          QR Device 관리·접근 이력 추적, 검증 실패 기기를 예외 처리하는 운영 장애 대응용 Whitelist 기능을 개발했습니다.
+        </p>
+        <div class="tags">
+          <span class="tag">Java</span><span class="tag">Spring Boot 4.x</span><span class="tag">JPA</span>
+          <span class="tag">QueryDSL</span><span class="tag">PostgreSQL</span><span class="tag">Spring Security</span>
+        </div>
+      </div>
+
+      <div class="tnode">
+        <p class="period">2022.11 – 2026.01 · 3년 3개월</p>
+        <h3>오픈플랜주식회사</h3>
+        <p class="role">백엔드 매니저 · Toggle 3.0 리빌드 / Global MVP</p>
+        <p class="summary">
+          레거시 PHP 플랫폼을 Spring Boot로 전면 리빌드하고, Stripe·Starr API 기반 글로벌 신규 플랫폼을 런칭했습니다.
+          자세한 내용은 위 케이스 스터디를 참고해 주세요.
+        </p>
+        <a class="jump" href="#case-toggle">↑ Toggle 3.0 케이스 스터디 보기</a>
+      </div>
+
+      <div class="tnode">
+        <p class="period">2022.09 – 2023.02 · 6개월 · 프리랜서</p>
+        <h3>게임스카우트</h3>
+        <p class="role">백엔드 · 게임 채용 플랫폼 / 관리자 백오피스</p>
+        <p class="summary">
+          회원가입·로그인·채용공고·매칭 지원 기능과 관리자 백오피스를 개발했습니다.
+          QueryDSL 기반 다중 조건 검색·매칭 로직을 최적화하고, Gradle 멀티모듈 구조로 공통 로직을 모듈화했습니다.
+        </p>
+        <div class="tags">
+          <span class="tag">Java</span><span class="tag">Spring Boot 2.x</span><span class="tag">JPA</span>
+          <span class="tag">QueryDSL</span><span class="tag">MySQL</span><span class="tag">Gradle</span>
+        </div>
+      </div>
+
+      <div class="tnode">
+        <p class="period">2021.08 – 2022.10 · 1년 3개월</p>
+        <h3>주식회사 휴니크</h3>
+        <p class="role">백엔드 매니저 · Zelotek 2.0 / Banny</p>
+        <p class="summary">
+          PHP 외주 프로젝트를 Spring Boot로 전면 마이그레이션한 매장 매출관리 플랫폼(Zelotek 2.0)과,
+          바코드 기반 출입·예약 서비스(Banny)를 개발했습니다. AWS ECS·CodePipeline으로 무중단 배포 체계를 마련했고,
+          두 서비스 간 공통 유틸·응답 스키마·에러 핸들링 구조를 공유해 협업 효율을 높였습니다.
+        </p>
+        <div class="tags">
+          <span class="tag">Java</span><span class="tag">Spring Boot 2.x</span><span class="tag">Spring Security</span>
+          <span class="tag">JPA</span><span class="tag">QueryDSL</span><span class="tag">AWS ECS</span><span class="tag">CodePipeline</span>
+        </div>
+      </div>
+
+      <div class="tnode">
+        <p class="period">2019.11 – 2021.08 · 1년 10개월</p>
+        <h3>주식회사 호두랩스</h3>
+        <p class="role">백엔드 프로 · 호두잉글리시 / 땅콩 홈페이지·LMS</p>
+        <p class="summary">
+          아동 영어 학습 플랫폼의 결제·회원 관리 기능을 개발하고, 간편 로그인(카카오/네이버)과 Siren24 실명인증을 통합했습니다.
+          이후 교육 콘텐츠·도서 판매·학습관리시스템(LMS)의 진도·결제·통계 기능을 고도화했습니다.
+        </p>
+        <div class="tags">
+          <span class="tag">Java 8</span><span class="tag">Spring Boot 2.x</span><span class="tag">JPA</span>
+          <span class="tag">Gradle</span><span class="tag">Thymeleaf</span><span class="tag">jQuery</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Skills ===== -->
+  <section id="skills">
+    <div class="section-head">
+      <p class="eyebrow">Skills</p>
+      <h2>기술 스택</h2>
+    </div>
+    <div class="skill-groups">
+      <div class="skill-group">
+        <p class="label">Core</p>
+        <div class="tags">
+          <span class="tag">Java</span><span class="tag">Spring Boot</span><span class="tag">JPA</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <p class="label">Data</p>
+        <div class="tags">
+          <span class="tag">MySQL</span><span class="tag">Redis</span><span class="tag">MongoDB</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <p class="label">Infra & Tools</p>
+        <div class="tags">
+          <span class="tag">Docker</span><span class="tag">AWS</span><span class="tag">Jenkins</span>
+          <span class="tag">Git</span><span class="tag">GitHub</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <p class="label">Collaboration</p>
+        <div class="tags">
+          <span class="tag">RESTful API</span><span class="tag">JIRA</span><span class="tag">Slack</span>
+          <span class="tag">HTML5</span><span class="tag">jQuery</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Education ===== -->
+  <section id="education">
+    <div class="section-head">
+      <p class="eyebrow">Education</p>
+      <h2>학력</h2>
+    </div>
+    <div class="edu-item">
+      <div>
+        <div class="school">California State University, Bakersfield</div>
+        <div class="degree">Computer Science · Cum Laude, GPA 3.57 / 4.0</div>
+      </div>
+      <div class="period">2015.08 – 2018.05</div>
+    </div>
+    <div class="edu-item">
+      <div>
+        <div class="school">Bakersfield College</div>
+        <div class="degree">Associate Degree · STEM (Computer Science, Mathematics)</div>
+      </div>
+      <div class="period">2011.08 – 2015.03</div>
+    </div>
+  </section>
+
+  <footer>
+    <span>오영수 — Backend Engineer</span>
+    <span><a href="mailto:oh.youngsoo23@gmail.com">oh.youngsoo23@gmail.com</a> · <a href="https://github.com/youngsoo23" target="_blank" rel="noopener">GitHub</a></span>
+  </footer>
+
+</div>
+</body>
+</html>
