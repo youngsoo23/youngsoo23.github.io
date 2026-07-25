@@ -1,0 +1,41 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Tag from '../components/Tag.astro';
+import { career, totalExperience } from '../data/career';
+
+const projects = await getCollection('projects');
+function projectTitle(slug: string) {
+  return projects.find((p) => p.id === slug)?.data.title ?? slug;
+}
+---
+
+<BaseLayout title="경력" description={`오영수의 경력 타임라인 — ${totalExperience}`}>
+  <p class="font-mono text-xs uppercase tracking-wide text-ink-faint">Career — {totalExperience}</p>
+  <h1 class="mt-2 text-2xl font-bold text-ink">경력 타임라인</h1>
+
+  <div class="mt-8">
+    {career.map((entry) => (
+      <div class="border-t border-line py-6 first:border-t-0">
+        <p class="font-mono text-xs text-ink-faint">{entry.period} · {entry.duration}</p>
+        <h2 class="mt-1.5 text-lg font-bold text-ink">{entry.company}</h2>
+        <p class="mt-0.5 text-sm text-ink-soft">{entry.role}</p>
+        <p class="mt-3 max-w-2xl text-[15px] leading-relaxed text-ink-soft">{entry.summary}</p>
+        {entry.tags.length > 0 && (
+          <div class="mt-3">
+            <Tag tags={entry.tags} />
+          </div>
+        )}
+        {entry.projectSlugs && entry.projectSlugs.length > 0 && (
+          <div class="mt-3 flex flex-wrap gap-x-4 gap-y-1">
+            {entry.projectSlugs.map((slug) => (
+              <a href={`/projects/${slug}`} class="text-sm font-semibold text-accent hover:underline">
+                {projectTitle(slug)} →
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+    ))}
+  </div>
+</BaseLayout>

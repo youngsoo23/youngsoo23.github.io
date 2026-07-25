@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="이력서" description="오영수 이력서 PDF">
+  <div class="flex flex-wrap items-baseline justify-between gap-4">
+    <div>
+      <p class="font-mono text-xs uppercase tracking-wide text-ink-faint">Resume</p>
+      <h1 class="mt-2 text-2xl font-bold text-ink">이력서</h1>
+    </div>
+    <a
+      href="/resume.pdf"
+      download
+      class="rounded-sm bg-accent px-5 py-2.5 text-sm font-semibold text-accent-ink hover:opacity-90"
+    >
+      PDF 다운로드
+    </a>
+  </div>
+
+  <div class="mt-8 overflow-hidden rounded-sm border border-line" style="height: 80vh;">
+    <object data="/resume.pdf" type="application/pdf" width="100%" height="100%">
+      <p class="p-6 text-sm text-ink-soft">
+        브라우저에서 PDF 미리보기를 지원하지 않습니다.
+        <a href="/resume.pdf" class="text-accent hover:underline">여기를 눌러 다운로드하세요</a>.
+      </p>
+    </object>
+  </div>
+</BaseLayout>

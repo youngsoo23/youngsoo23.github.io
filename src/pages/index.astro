@@ -1,0 +1,103 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ListItem from '../components/ListItem.astro';
+import { intro, contact } from '../data/about';
+import { career, totalExperience } from '../data/career';
+
+const allProjects = await getCollection('projects');
+const featured = allProjects
+  .filter((p) => p.data.featured)
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 3);
+
+const allPosts = await getCollection('posts');
+const recentPosts = allPosts
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf())
+  .slice(0, 3);
+
+const current = career[0];
+---
+
+<BaseLayout
+  title="홈"
+  description="Java·Spring 기반 7년차 백엔드 개발자 오영수의 포트폴리오"
+>
+  <header>
+    <h1 class="text-3xl font-bold text-ink text-balance">오영수 | Backend Developer</h1>
+    <p class="mt-2 text-lg text-ink-soft">{intro.role}</p>
+    <p class="mt-4 max-w-md text-ink">{intro.mission}</p>
+    <div class="mt-7 flex flex-wrap gap-3">
+      <a
+        href="/resume"
+        class="rounded-sm bg-accent px-5 py-2.5 text-sm font-semibold text-accent-ink hover:opacity-90"
+      >
+        이력서 보기
+      </a>
+      <a
+        href="/projects"
+        class="rounded-sm border border-accent px-5 py-2.5 text-sm font-semibold text-accent hover:bg-accent hover:text-accent-ink"
+      >
+        프로젝트 보기
+      </a>
+      <a
+        href={contact.github}
+        target="_blank"
+        rel="noopener"
+        class="rounded-sm border border-line px-5 py-2.5 text-sm font-semibold text-ink-soft hover:border-ink-faint hover:text-ink"
+      >
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <section class="mt-16">
+    <p class="font-mono text-xs uppercase tracking-wide text-ink-faint">Career</p>
+    <p class="mt-3 max-w-2xl text-[15px] leading-relaxed text-ink-soft">
+      Java·Spring 기반 백엔드 개발자로 <strong class="text-ink">{totalExperience}</strong> 동안
+      보험·결제 플랫폼의 레거시 리빌드와 운영 구조 개선을 담당했습니다. 현재는
+      <strong class="text-ink">{current.company}</strong>에서 {current.role}로 재직했습니다.
+    </p>
+    <a href="/career" class="mt-3 inline-block text-sm font-semibold text-accent hover:underline">
+      전체 경력 타임라인 보기 →
+    </a>
+  </section>
+
+  <section class="mt-16">
+    <p class="font-mono text-xs uppercase tracking-wide text-ink-faint">Featured Projects</p>
+    <h2 class="mt-2 text-xl font-bold text-ink">대표 프로젝트</h2>
+    <div class="mt-4">
+      {featured.map((p) => (
+        <ListItem
+          href={`/projects/${p.id}`}
+          title={p.data.title}
+          meta={`${p.data.company} · ${p.data.period}`}
+          summary={p.data.summary}
+        />
+      ))}
+    </div>
+    <a href="/projects" class="mt-6 inline-block text-sm font-semibold text-accent hover:underline">
+      모든 프로젝트 보기 →
+    </a>
+  </section>
+
+  <section class="mt-16">
+    <p class="font-mono text-xs uppercase tracking-wide text-ink-faint">Recent Posts</p>
+    <h2 class="mt-2 text-xl font-bold text-ink">최근 기술 글</h2>
+    {recentPosts.length > 0 ? (
+      <div class="mt-4">
+        {recentPosts.map((post) => (
+          <ListItem
+            href={`/posts/${post.id}`}
+            title={post.data.title}
+            meta={post.data.publishDate.toISOString().slice(0, 10)}
+            summary={post.data.summary}
+          />
+        ))}
+      </div>
+    ) : (
+      <p class="mt-4 text-sm text-ink-faint">곧 첫 글을 공개할 예정입니다.</p>
+    )}
+  </section>
+</BaseLayout>
