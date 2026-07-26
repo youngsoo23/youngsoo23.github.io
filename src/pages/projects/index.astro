@@ -5,10 +5,9 @@ import ListItem from '../../components/ListItem.astro';
 
 const all = await getCollection('projects');
 const flagship = all.filter((p) => p.data.type === 'flagship').sort((a, b) => a.data.order - b.data.order);
-const cases = all.filter((p) => p.data.type === 'case').sort((a, b) => a.data.order - b.data.order);
 ---
 
-<BaseLayout title="프로젝트" description="오영수의 대표 프로젝트와 문제 해결 사례">
+<BaseLayout title="프로젝트" description="오영수의 대표 프로젝트">
   <p class="font-mono text-xs uppercase tracking-wide text-ink-faint">Projects</p>
   <h1 class="mt-2 text-2xl font-bold text-ink">프로젝트</h1>
 
@@ -16,20 +15,6 @@ const cases = all.filter((p) => p.data.type === 'case').sort((a, b) => a.data.or
     <h2 class="text-sm font-semibold uppercase tracking-wide text-ink-faint">대표 프로젝트</h2>
     <div class="mt-2">
       {flagship.map((p) => (
-        <ListItem
-          href={`/projects/${p.id}`}
-          title={p.data.title}
-          meta={`${p.data.company} · ${p.data.period}`}
-          summary={p.data.summary}
-        />
-      ))}
-    </div>
-  </section>
-
-  <section class="mt-14">
-    <h2 class="text-sm font-semibold uppercase tracking-wide text-ink-faint">문제 해결 사례</h2>
-    <div class="mt-2">
-      {cases.map((p) => (
         <ListItem
           href={`/projects/${p.id}`}
           title={p.data.title}
