@@ -60,6 +60,24 @@ export const skillGroups = [
   { label: 'Collaboration', items: ['RESTful API', 'JIRA', 'Slack', 'HTML5', 'jQuery'] },
 ];
 
+export const learning = [
+  {
+    title: 'graphql',
+    detail: 'GraphQL 베스트 프랙티스 학습',
+    url: 'https://github.com/youngsoo23/graphql',
+  },
+  {
+    title: 'tdd-arch-practice',
+    detail: 'TDD 기반 아키텍처 설계 연습',
+    url: 'https://github.com/youngsoo23/tdd-arch-practice',
+  },
+  {
+    title: 'study-note',
+    detail: '기술 학습 기록',
+    url: 'https://github.com/youngsoo23/study-note',
+  },
+];
+
 export const education = [
   {
     school: 'California State University, Bakersfield',

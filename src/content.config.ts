@@ -11,7 +11,7 @@ const projects = defineCollection({
     period: z.string(),
     tags: z.array(z.string()),
     featured: z.boolean().default(false),
-    type: z.enum(['flagship', 'case']),
+    type: z.enum(['flagship', 'case', 'personal']),
     order: z.number().default(0),
   }),
 });

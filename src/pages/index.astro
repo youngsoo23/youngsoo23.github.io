@@ -7,7 +7,12 @@ import { career, totalExperience } from '../data/career';
 
 const allProjects = await getCollection('projects');
 const featured = allProjects
-  .filter((p) => p.data.featured)
+  .filter((p) => p.data.featured && p.data.type !== 'personal')
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 3);
+
+const sideProjects = allProjects
+  .filter((p) => p.data.type === 'personal')
   .sort((a, b) => a.data.order - b.data.order)
   .slice(0, 3);
 
@@ -81,6 +86,24 @@ const current = career[0];
       모든 프로젝트 보기 →
     </a>
   </section>
+
+  {sideProjects.length > 0 && (
+    <section class="mt-16">
+      <p class="font-mono text-xs uppercase tracking-wide text-ink-faint">Side Projects</p>
+      <h2 class="mt-2 text-xl font-bold text-ink">사이드 프로젝트</h2>
+      <div class="mt-4">
+        {sideProjects.map((p) => (
+          <ListItem
+            href={`/projects/${p.id}`}
+            title={p.data.title}
+            meta={`${p.data.company} · ${p.data.period}`}
+            summary={p.data.summary}
+            badge="개인 프로젝트"
+          />
+        ))}
+      </div>
+    </section>
+  )}
 
   <section class="mt-16">
     <p class="font-mono text-xs uppercase tracking-wide text-ink-faint">Recent Posts</p>
