@@ -1,23 +1,45 @@
 ---
 import { getCollection, render } from 'astro:content';
-import ContentLayout from '../../layouts/ContentLayout.astro';
+import Layout from '@/components/layout/Layout.astro';
+import ArticleShell from '@/components/posts/ArticleShell.astro';
+import TechList from '@/components/common/TechList.astro';
+import Metric from '@/components/projects/Metric.astro';
+import { getMetric } from '@/lib/metric';
+import { withBase } from '@/lib/paths';
+import { SITE_NAME } from '@/lib/site';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
-  return projects.map((p) => ({ params: { slug: p.id }, props: { entry: p } }));
+  return projects.map((project) => ({ params: { slug: project.id }, props: { project } }));
 }
 
-const { entry } = Astro.props;
-const { Content } = await render(entry);
+const { project } = Astro.props;
+const { Content, headings } = await render(project);
+const metric = getMetric(project.data.metric);
 ---
 
-<ContentLayout
-  title={entry.data.title}
-  description={entry.data.summary}
-  meta={`${entry.data.company} · ${entry.data.period}`}
-  tags={entry.data.tags}
-  backHref="/projects"
-  backLabel="← 프로젝트 목록으로"
+<Layout
+  title={`${project.data.title} — ${SITE_NAME}`}
+  description={project.data.summary}
+  canonicalPath={`/projects/${project.id}/`}
+  ogType="article"
 >
-  <Content />
-</ContentLayout>
+  <main class="content-shell">
+    <ArticleShell title={project.data.title} description={project.data.summary} headings={headings}>
+      <p slot="meta" class="mt-0 mb-3 text-[0.85rem] font-bold text-muted">
+        <a class="text-accent underline underline-offset-4" href={withBase('/projects/')}>
+          프로젝트
+        </a>
+        {' · '}
+        {project.data.company}
+        {' · '}
+        <span class="font-mono">{project.data.period}</span>
+      </p>
+      <div slot="footer" class="mt-5 grid justify-items-start gap-5">
+        {metric && <Metric value={metric.value} label={metric.label} />}
+        <TechList technologies={project.data.tags} label="기술 스택" />
+      </div>
+      <Content />
+    </ArticleShell>
+  </main>
+</Layout>

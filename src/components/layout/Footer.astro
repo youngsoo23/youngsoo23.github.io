@@ -1,0 +1,26 @@
+---
+import { EMAIL, GITHUB_URL, SITE_NAME, SOURCE_URL } from '@/lib/site';
+
+const fullYear = new Date().getFullYear();
+const links = [
+  { label: '이메일', href: `mailto:${EMAIL}`, external: false },
+  { label: 'GitHub', href: GITHUB_URL, external: true },
+  { label: '소스 코드 (AGPL-3.0)', href: SOURCE_URL, external: true },
+];
+---
+
+<footer class="site-footer flex flex-wrap items-center justify-center gap-x-6 gap-y-2 border-t-4 border-ink px-5 py-7 font-heading text-[0.95rem] font-semibold text-ink">
+  <span>
+    &copy; {fullYear} {SITE_NAME}
+  </span>
+  {links.map((link) => (
+    <a
+      href={link.href}
+      target={link.external ? '_blank' : undefined}
+      rel={link.external ? 'noopener' : undefined}
+      class="underline underline-offset-4"
+    >
+      {link.label}
+    </a>
+  ))}
+</footer>

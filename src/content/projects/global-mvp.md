@@ -7,6 +7,16 @@ tags: ["Java 21", "Spring Boot 3.3.x", "JPA", "RestClient", "Redis", "Docker", "
 featured: true
 type: "flagship"
 order: 2
+name: "Global MVP"
+icon: "world"
+card:
+  problem: "해외 시장 반응을 빠르게 검증해야 했고, 중복 결제와 데이터 불일치를 막아야 했습니다."
+  action: "MSA 대신 MVP 구조를 택해 데이터 모델과 API 서버를 구축하고, idempotency key·Webhook 검증을 설계했습니다."
+  result: "약 2개월 내 런칭하고, Slack 장애 알림 체계를 마련했습니다."
+# 대표 성과 지표 1개. 두 값이 TODO이거나 비어 있으면 화면에 표시되지 않습니다.
+metric:
+  value: "TODO" # 크게 강조할 숫자
+  label: "TODO" # 숫자에 대한 설명
 ---
 
 ## 배경

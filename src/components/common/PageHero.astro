@@ -1,0 +1,25 @@
+---
+import Eyebrow from '@/components/common/Eyebrow.astro';
+
+interface Props {
+  title: string;
+  hideTitle?: boolean;
+  eyebrow?: string;
+}
+
+const { title, hideTitle = false, eyebrow } = Astro.props;
+---
+
+<section class="mx-auto max-w-(--max) px-5 pt-15 pb-1 max-sm:pt-11 max-sm:pb-7">
+  {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
+  <h1
+    class:list={[
+      hideTitle
+        ? 'sr-only'
+        : 'm-0 text-[clamp(2.2rem,5vw,3.6rem)] leading-[1.15] font-bold tracking-[-0.02em] text-ink',
+    ]}
+  >
+    {title}
+  </h1>
+  <slot />
+</section>

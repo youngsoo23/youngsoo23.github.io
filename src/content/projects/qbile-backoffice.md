@@ -7,6 +7,16 @@ tags: ["Java 21", "Spring Boot 4.x", "JPA", "QueryDSL", "PostgreSQL", "Spring Se
 featured: true
 type: "flagship"
 order: 3
+name: "Qbile Backoffice"
+icon: "shield-lock"
+card:
+  problem: "체계 없는 운영은 장애 원인 파악을 어렵게 하고, 검증 실패 기기가 서비스 중단을 부를 위험이 있었습니다."
+  action: "권한별 접근 제어, Whitelist 예외 처리, 접근 이력 추적을 구현했습니다."
+  result: "장애 원인 분석 효율을 높이고, 서비스 연속성과 운영 보안을 강화했습니다."
+# 대표 성과 지표 1개. 두 값이 TODO이거나 비어 있으면 화면에 표시되지 않습니다.
+metric:
+  value: "TODO" # 크게 강조할 숫자
+  label: "TODO" # 숫자에 대한 설명
 ---
 
 ## 배경

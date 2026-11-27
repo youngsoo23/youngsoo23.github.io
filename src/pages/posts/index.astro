@@ -1,30 +1,48 @@
 ---
-import { getCollection } from 'astro:content';
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import ListItem from '../../components/ListItem.astro';
+import Layout from '@/components/layout/Layout.astro';
+import Lede from '@/components/common/Lede.astro';
+import PageHero from '@/components/common/PageHero.astro';
+import PostCard from '@/components/posts/PostCard.astro';
+import { getPublishedPosts } from '@/lib/content';
+import { withBase } from '@/lib/paths';
+import { BLOG_DESCRIPTION, SITE_NAME } from '@/lib/site';
 
-const all = await getCollection('posts');
-const posts = all
-  .filter((p) => !p.data.draft)
-  .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
+const posts = await getPublishedPosts();
 ---
 
-<BaseLayout title="기술 글" description="오영수가 정리한 기술적 판단과 문제 해결 과정">
-  <p class="font-mono text-xs uppercase tracking-wide text-ink-faint">Posts</p>
-  <h1 class="mt-2 text-2xl font-bold text-ink">기술 글</h1>
+<Layout title={`글 — ${SITE_NAME}`} description={BLOG_DESCRIPTION} canonicalPath="/posts/">
+  <main class="content-shell">
+    <PageHero title="글" hideTitle>
+      <Lede>{BLOG_DESCRIPTION}</Lede>
+      <a class="tags-link" href={withBase('/tags/')}>
+        태그로 보기 <span aria-hidden="true">→</span>
+      </a>
+    </PageHero>
 
-  {posts.length > 0 ? (
-    <div class="mt-8">
-      {posts.map((post) => (
-        <ListItem
-          href={`/posts/${post.id}`}
-          title={post.data.title}
-          meta={post.data.publishDate.toISOString().slice(0, 10)}
-          summary={post.data.summary}
-        />
-      ))}
-    </div>
-  ) : (
-    <p class="mt-8 text-sm text-ink-faint">곧 첫 글을 공개할 예정입니다.</p>
-  )}
-</BaseLayout>
+    <section class="section w-full" aria-label="글 목록">
+      {posts.length === 0 ? (
+        <p class="text-muted">곧 첫 글을 공개할 예정입니다.</p>
+      ) : (
+        <div class="grid gap-8">
+          {posts.map((post, index) => (
+            <PostCard post={post} latest={index === 0} />
+          ))}
+        </div>
+      )}
+    </section>
+  </main>
+</Layout>
+
+<style>
+  @reference "@/styles/global.css";
+
+  .tags-link {
+    @apply inline-flex min-h-[2.6rem] items-center gap-2 border-2 border-ink bg-bg-elevated px-[1.1rem] py-[0.6rem];
+    @apply font-heading text-[0.9rem] font-semibold text-ink shadow-[3px_3px_0_0_var(--ink)];
+    @apply transition-[translate,box-shadow,background-color,color] duration-120 ease-[ease];
+  }
+
+  .tags-link:hover {
+    @apply translate-x-[1px] translate-y-[1px] bg-accent text-bg shadow-[2px_2px_0_0_var(--ink)];
+  }
+</style>

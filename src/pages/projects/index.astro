@@ -1,45 +1,17 @@
 ---
-import { getCollection } from 'astro:content';
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import ListItem from '../../components/ListItem.astro';
-
-const all = await getCollection('projects');
-const flagship = all.filter((p) => p.data.type === 'flagship').sort((a, b) => a.data.order - b.data.order);
-const personal = all.filter((p) => p.data.type === 'personal').sort((a, b) => a.data.order - b.data.order);
+import { PROJECTS_DESCRIPTION, SITE_NAME } from '@/lib/site';
+import Layout from '@/components/layout/Layout.astro';
+import Lede from '@/components/common/Lede.astro';
+import PageHero from '@/components/common/PageHero.astro';
+import Projects from '@/components/projects/index.astro';
 ---
 
-<BaseLayout title="프로젝트" description="오영수의 대표 프로젝트">
-  <p class="font-mono text-xs uppercase tracking-wide text-ink-faint">Projects</p>
-  <h1 class="mt-2 text-2xl font-bold text-ink">프로젝트</h1>
+<Layout title={`프로젝트 — ${SITE_NAME}`} description={PROJECTS_DESCRIPTION} canonicalPath="/projects/">
+  <main class="content-shell">
+    <PageHero title="프로젝트" hideTitle>
+      <Lede>{PROJECTS_DESCRIPTION}</Lede>
+    </PageHero>
 
-  <section class="mt-10">
-    <h2 class="text-sm font-semibold uppercase tracking-wide text-ink-faint">대표 프로젝트</h2>
-    <div class="mt-2">
-      {flagship.map((p) => (
-        <ListItem
-          href={`/projects/${p.id}`}
-          title={p.data.title}
-          meta={`${p.data.company} · ${p.data.period}`}
-          summary={p.data.summary}
-        />
-      ))}
-    </div>
-  </section>
-
-  {personal.length > 0 && (
-    <section class="mt-10">
-      <h2 class="text-sm font-semibold uppercase tracking-wide text-ink-faint">사이드 프로젝트</h2>
-      <div class="mt-2">
-        {personal.map((p) => (
-          <ListItem
-            href={`/projects/${p.id}`}
-            title={p.data.title}
-            meta={`${p.data.company} · ${p.data.period}`}
-            summary={p.data.summary}
-            badge="개인 프로젝트"
-          />
-        ))}
-      </div>
-    </section>
-  )}
-</BaseLayout>
+    <Projects />
+  </main>
+</Layout>

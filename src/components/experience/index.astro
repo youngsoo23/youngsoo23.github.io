@@ -1,0 +1,40 @@
+---
+// 회사별 항목은 src/data/career.ts에서 만든다. 기간과 총 경력도 그 데이터에서 계산한다.
+import { getCollection } from 'astro:content';
+import ExperienceEntry from './ExperienceEntry.astro';
+import TechList from '@/components/common/TechList.astro';
+import { career } from '@/data/career';
+import { formatDuration, formatPeriod, spanMonths } from '@/lib/career';
+import { withBase } from '@/lib/paths';
+
+const projects = await getCollection('projects');
+const projectTitles = new Map(projects.map((p) => [p.id, p.data.title]));
+---
+
+{career.map((entry) => (
+  <ExperienceEntry
+    role={[entry.role, entry.note].filter(Boolean).join(' · ')}
+    organization={{ name: entry.company }}
+    dates={`${formatPeriod(entry)} · ${formatDuration(spanMonths(entry))}`}
+  >
+    <p>{entry.summary}</p>
+    {entry.tags.length > 0 && (
+      <div>
+        <TechList technologies={entry.tags} label={`${entry.company} 기술 스택`} />
+      </div>
+    )}
+    {entry.projectSlugs && (
+      <div>
+        <ul class="m-0 grid list-none gap-1 p-0" aria-label={`${entry.company} 관련 프로젝트`}>
+          {entry.projectSlugs.map((slug) => (
+            <li>
+              <a class="font-semibold" href={withBase(`/projects/${slug}/`)}>
+                {projectTitles.get(slug) ?? slug} →
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+  </ExperienceEntry>
+))}

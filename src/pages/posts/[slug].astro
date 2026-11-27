@@ -1,23 +1,59 @@
 ---
-import { getCollection, render } from 'astro:content';
-import ContentLayout from '../../layouts/ContentLayout.astro';
+import { render } from 'astro:content';
+import Layout from '@/components/layout/Layout.astro';
+import ArticleShell from '@/components/posts/ArticleShell.astro';
+import Tag from '@/components/common/Tag.astro';
+import { getPublishedPosts } from '@/lib/content';
+import { formatPostDate, postSlug } from '@/lib/posts';
+import { slugifyTag } from '@/lib/tags';
+import { withBase } from '@/lib/paths';
+import { AUTHOR_NAME, SITE_NAME } from '@/lib/site';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('posts');
-  return posts.map((p) => ({ params: { slug: p.id }, props: { entry: p } }));
+  const posts = await getPublishedPosts();
+  return posts.map((post) => {
+    const slug = postSlug(post);
+    return { params: { slug }, props: { post, slug } };
+  });
 }
 
-const { entry } = Astro.props;
-const { Content } = await render(entry);
+const { post, slug } = Astro.props;
+const { Content, headings } = await render(post);
+const tags = post.data.tags.filter((tag) => slugifyTag(tag) !== '');
+
+const postSchema = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: post.data.date.toISOString(),
+  url: new URL(withBase(`/posts/${slug}/`), Astro.site).toString(),
+  author: { '@type': 'Person', name: AUTHOR_NAME, url: new URL(withBase('/'), Astro.site).toString() },
+}).replace(/</g, '\\u003c');
 ---
 
-<ContentLayout
-  title={entry.data.title}
-  description={entry.data.summary}
-  meta={entry.data.publishDate.toISOString().slice(0, 10)}
-  tags={entry.data.tags}
-  backHref="/posts"
-  backLabel="← 기술 글 목록으로"
+<Layout
+  title={`${post.data.title} — ${SITE_NAME}`}
+  description={post.data.description}
+  canonicalPath={`/posts/${slug}/`}
+  ogType="article"
 >
-  <Content />
-</ContentLayout>
+  <script type="application/ld+json" is:inline set:html={postSchema}></script>
+  <main class="content-shell">
+    <ArticleShell title={post.data.title} description={post.data.description} headings={headings}>
+      <p slot="meta" class="mt-0 mb-3 font-mono text-[0.8rem] font-bold text-muted">
+        <time datetime={post.data.date.toISOString()}>{formatPostDate(post.data.date)}</time>
+      </p>
+      <Fragment slot="footer">
+        {tags.length > 0 && (
+          <p class="mt-4 mb-0 flex max-w-[680px] flex-wrap gap-2">
+            {tags.map((tag) => (
+              <Tag href={withBase(`/tags/${slugifyTag(tag)}/`)}>#{tag}</Tag>
+            ))}
+          </p>
+        )}
+      </Fragment>
+      <Content />
+    </ArticleShell>
+  </main>
+</Layout>

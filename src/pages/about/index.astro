@@ -1,0 +1,106 @@
+---
+import Card from '@/components/common/Card.astro';
+import Lede from '@/components/common/Lede.astro';
+import PageHero from '@/components/common/PageHero.astro';
+import TechList from '@/components/common/TechList.astro';
+import Layout from '@/components/layout/Layout.astro';
+import { approach, education, intro, learning, skillGroups, strengths } from '@/data/about';
+import { ABOUT_DESCRIPTION, SITE_NAME } from '@/lib/site';
+
+const heading = 'mt-0 mb-6 text-[1.6rem]';
+---
+
+<Layout title={`소개 — ${SITE_NAME}`} description={ABOUT_DESCRIPTION} canonicalPath="/about/">
+  <main class="content-shell">
+    <PageHero title="소개" hideTitle>
+      <Lede>{ABOUT_DESCRIPTION}</Lede>
+    </PageHero>
+
+    <section class="section w-full" aria-label="요약">
+      <Card>
+        <p class="m-0 text-[1.1rem] leading-[1.9]">{intro.summary}</p>
+      </Card>
+    </section>
+
+    <section class="section w-full" aria-labelledby="strengths-heading">
+      <h2 id="strengths-heading" class={heading}>
+        핵심 역량
+      </h2>
+      <ul class="m-0 grid list-none gap-6 p-0 md:grid-cols-2">
+        {strengths.map((strength) => (
+          <Card as="li">
+            <h3 class="mt-0 mb-2 text-[1.15rem]">{strength.title}</h3>
+            <p class="m-0 text-[0.95rem] text-ink-soft">{strength.detail}</p>
+          </Card>
+        ))}
+      </ul>
+    </section>
+
+    <section class="section w-full" aria-labelledby="approach-heading">
+      <h2 id="approach-heading" class={heading}>
+        업무 방식
+      </h2>
+      <ol class="m-0 list-none border-t-2 border-ink p-0">
+        {approach.map((item, index) => (
+          <li class="grid grid-cols-[2.5rem_minmax(0,1fr)] gap-3 border-b-2 border-line py-5">
+            <span class="font-mono font-bold text-accent" aria-hidden="true">
+              {String(index + 1).padStart(2, '0')}
+            </span>
+            <div>
+              <h3 class="m-0 text-[1.1rem]">{item.title}</h3>
+              <p class="mt-1 mb-0 text-[0.95rem] text-ink-soft">{item.detail}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section class="section w-full" aria-labelledby="skills-heading">
+      <h2 id="skills-heading" class={heading}>
+        기술 스택
+      </h2>
+      <dl class="m-0 grid gap-6 sm:grid-cols-2">
+        {skillGroups.map((group) => (
+          <div>
+            <dt class="mb-2 font-heading text-[0.95rem] font-bold">{group.label}</dt>
+            <dd class="m-0">
+              <TechList technologies={group.items} label={`${group.label} 기술`} />
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <section class="section w-full" aria-labelledby="learning-heading">
+      <h2 id="learning-heading" class={heading}>
+        학습 기록
+      </h2>
+      <p class="mt-0 mb-4 text-ink-soft">새로운 개념을 익힐 때 practice 레포로 남깁니다.</p>
+      <ul class="m-0 list-none border-t-2 border-ink p-0">
+        {learning.map((item) => (
+          <li class="border-b-2 border-line py-3">
+            <a class="font-mono font-bold text-accent" href={item.url} target="_blank" rel="noopener">
+              {item.title} ↗
+            </a>
+            <span class="ml-3 text-[0.95rem] text-muted">{item.detail}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="section w-full" aria-labelledby="education-heading">
+      <h2 id="education-heading" class={heading}>
+        학력
+      </h2>
+      <ul class="m-0 grid list-none gap-5 p-0">
+        {education.map((item) => (
+          <li>
+            <h3 class="m-0 text-[1.1rem]">{item.school}</h3>
+            <p class="m-0 text-[0.95rem] text-ink-soft">{item.degree}</p>
+            <p class="m-0 font-mono text-[0.8rem] text-muted">{item.period}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </main>
+</Layout>

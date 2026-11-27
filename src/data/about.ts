@@ -1,8 +1,9 @@
+import { totalExperience } from './career';
+
 export const intro = {
-  role: 'Java·Spring 기반 7년차 백엔드 개발자',
-  mission: '복잡한 업무 흐름을 구조화하고, 운영 문제를 시스템으로 개선합니다.',
+  role: 'Java·Spring 기반 백엔드 개발자',
   summary:
-    '7년간 보험·결제 플랫폼에서 레거시 시스템을 리빌드하고 운영 구조를 개선해왔습니다. ' +
+    `${totalExperience} 동안 보험·결제 플랫폼에서 레거시 시스템을 리빌드하고 운영 구조를 개선해왔습니다. ` +
     '외주 PHP 기반 플랫폼을 Spring Boot로 전면 재구축하며 API·DB·백오피스 구조를 재설계했고, ' +
     '결제·실명인증 같은 외부 연동에서는 장애와 비용 리스크를 격리하는 방향으로 판단해왔습니다.',
 };
@@ -54,10 +55,10 @@ export const approach = [
 ];
 
 export const skillGroups = [
-  { label: 'Core', items: ['Java', 'Spring Boot', 'JPA'] },
-  { label: 'Data', items: ['MySQL', 'Redis', 'MongoDB'] },
-  { label: 'Infra & Tools', items: ['Docker', 'AWS', 'Jenkins', 'Git', 'GitHub'] },
-  { label: 'Collaboration', items: ['RESTful API', 'JIRA', 'Slack', 'HTML5', 'jQuery'] },
+  { label: '핵심', items: ['Java', 'Spring Boot', 'JPA'] },
+  { label: '데이터', items: ['MySQL', 'Redis', 'MongoDB'] },
+  { label: '인프라·도구', items: ['Docker', 'AWS', 'Jenkins', 'Git', 'GitHub'] },
+  { label: '협업', items: ['RESTful API', 'JIRA', 'Slack', 'HTML5', 'jQuery'] },
 ];
 
 export const learning = [
@@ -90,8 +91,3 @@ export const education = [
     period: '2011.08 – 2015.03',
   },
 ];
-
-export const contact = {
-  email: 'oh.youngsoo23@gmail.com',
-  github: 'https://github.com/youngsoo23',
-};

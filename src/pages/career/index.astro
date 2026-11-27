@@ -1,0 +1,23 @@
+---
+import { EXPERIENCE_DESCRIPTION, SITE_NAME } from '@/lib/site';
+import Layout from '@/components/layout/Layout.astro';
+import Lede from '@/components/common/Lede.astro';
+import PageHero from '@/components/common/PageHero.astro';
+import Experience from '@/components/experience/index.astro';
+import { totalExperience } from '@/data/career';
+---
+
+<Layout title={`경력 — ${SITE_NAME}`} description={EXPERIENCE_DESCRIPTION} canonicalPath="/career/">
+  <main class="content-shell">
+    <PageHero title="경력" hideTitle>
+      <Lede>{EXPERIENCE_DESCRIPTION}</Lede>
+      <p class="m-0 text-ink-soft">
+        총 경력 <strong class="text-ink">{totalExperience}</strong>
+      </p>
+    </PageHero>
+
+    <section class="section grid w-full gap-8" aria-label="회사별 경력">
+      <Experience />
+    </section>
+  </main>
+</Layout>

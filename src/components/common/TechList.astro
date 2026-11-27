@@ -1,0 +1,18 @@
+---
+interface Props {
+  technologies: string[];
+  label: string;
+}
+
+const { technologies, label } = Astro.props;
+---
+
+{technologies.length > 0 && (
+  <ul class="m-0 flex list-none flex-wrap gap-2 p-0" aria-label={label}>
+    {technologies.map((technology) => (
+      <li class="border-2 border-ink bg-bg px-[0.6rem] py-[0.14rem] font-mono text-[0.7rem] leading-[1.4] font-bold text-ink">
+        {technology}
+      </li>
+    ))}
+  </ul>
+)}
