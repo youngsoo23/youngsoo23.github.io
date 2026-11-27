@@ -1,0 +1,111 @@
+---
+import Card from '@/components/common/Card.astro';
+import Icon from '@/components/common/Icon.astro';
+import TechList from '@/components/common/TechList.astro';
+import Metric from './Metric.astro';
+import { ANIMATED_UNDERLINE_CLASSES } from '@/lib/animatedUnderline';
+import { PROJECT_LINK_DEFINITIONS, type ProjectLink } from '@/lib/projects';
+
+interface Props {
+  name: string;
+  description: string;
+  technologies: string[];
+  links?: ProjectLink[];
+  isCooking?: boolean;
+  /** 상세 페이지 주소. 있으면 제목이 링크가 된다. */
+  href?: string;
+  company?: string;
+  period?: string;
+  steps?: { problem: string; action: string; result: string };
+  metric?: { value: string; label: string } | null;
+}
+
+const {
+  name,
+  description,
+  technologies,
+  links = [],
+  isCooking = false,
+  href,
+  company,
+  period,
+  steps,
+  metric,
+} = Astro.props;
+
+const stepItems = steps
+  ? [
+      { label: '문제', text: steps.problem },
+      { label: '내가 한 일', text: steps.action },
+      { label: '결과', text: steps.result },
+    ]
+  : [];
+---
+
+<Card as="article" class="flex min-w-0 flex-col gap-4">
+  <div>
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
+      <h3 class="m-0 text-[1.5em] leading-[1.35] font-bold tracking-[0.005em] text-ink">
+        {href ? (
+          <a class="underline decoration-accent decoration-2 underline-offset-4" href={href} set:text={name} />
+        ) : (
+          name
+        )}
+      </h3>
+      {isCooking && (
+        <span class="border-2 border-ink bg-accent px-[0.6rem] py-[0.14rem] text-[0.7rem] leading-[1.4] font-bold text-bg">
+          작업 중
+        </span>
+      )}
+    </div>
+    {company && (
+      <p class="mt-1 mb-0 text-[0.85rem] text-muted">
+        {company}
+        {period && (
+          <>
+            {' · '}
+            <span class="font-mono">{period}</span>
+          </>
+        )}
+      </p>
+    )}
+  </div>
+  <p class="m-0 leading-[1.7] text-ink-soft">{description}</p>
+  {metric && <Metric value={metric.value} label={metric.label} />}
+  {stepItems.length > 0 && (
+    <dl class="m-0 border-t-2 border-ink">
+      {stepItems.map((step) => (
+        <div class="grid gap-x-4 border-b-2 border-line py-3 sm:grid-cols-[6.5rem_minmax(0,1fr)]">
+          <dt class="font-heading text-[0.9rem] font-bold text-accent">{step.label}</dt>
+          <dd class="m-0 text-[0.95rem] leading-[1.7] text-ink-soft">{step.text}</dd>
+        </div>
+      ))}
+    </dl>
+  )}
+  <TechList technologies={technologies} label={`${name} 기술 스택`} />
+  {links.length > 0 && (
+    <div
+      class:list={[
+        'mt-auto flex flex-wrap gap-x-5 gap-y-2 pt-1 font-heading font-medium text-accent',
+        ...ANIMATED_UNDERLINE_CLASSES,
+      ]}
+      data-project-links
+    >
+      {links.map((link) => {
+        const definition = PROJECT_LINK_DEFINITIONS[link.kind];
+        return (
+          <a
+            class="inline-flex items-center gap-2"
+            href={link.url}
+            target="_blank"
+            rel="noopener"
+            aria-label={definition.getAriaLabel(name)}
+          >
+            <Icon icon={definition.icon} />
+            {definition.label}
+          </a>
+        );
+      })}
+    </div>
+  )}
+</Card>

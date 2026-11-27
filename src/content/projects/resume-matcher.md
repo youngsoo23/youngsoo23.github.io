@@ -7,6 +7,10 @@ tags: ["Kotlin", "Spring Boot", "Anthropic Claude API", "PDFBox", "Vanilla JS"]
 featured: true
 type: "personal"
 order: 1
+# TODO: 저장소나 데모 주소가 있으면 아래 주석을 풀고 채우세요. 비어 있으면 링크 줄이 숨겨집니다.
+# links:
+#   - { kind: "github", url: "" }
+#   - { kind: "demo", url: "" }
 ---
 
 ## 배경

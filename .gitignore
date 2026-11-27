@@ -6,19 +6,23 @@ dist/
 # dependencies
 node_modules/
 
+# testing
+screenshots/
+test-results/
+playwright-report/
+playwright/.cache/
+
 # logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-
 # environment variables
 .env
-.env.production
+.env.*
 
-# macOS-specific files
-.DS_Store
-
-# jetbrains setting folder
+# editor and tooling
+.vscode/
 .idea/
+.DS_Store

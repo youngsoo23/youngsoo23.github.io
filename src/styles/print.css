@@ -1,0 +1,53 @@
+/* 인쇄: 그림자와 장식을 빼고 흰 바탕에 검은 글자로 출력한다. */
+@media print {
+  :root,
+  :root[data-palette] {
+    --bg: #ffffff;
+    --bg-elevated: #ffffff;
+    --ink: #000000;
+    --ink-soft: #1f1f1f;
+    --muted: #444444;
+    --line: #bbbbbb;
+    --accent: #000000;
+    --pink: transparent;
+    --dot: transparent;
+  }
+
+  html {
+    font-size: 10.5pt;
+    line-height: 1.55;
+  }
+
+  body {
+    display: block;
+    min-height: 0;
+    background: #ffffff;
+    background-image: none;
+  }
+
+  .site-header,
+  .site-footer,
+  .theme-overlay,
+  .skip-link,
+  .falling-particles,
+  .sunlight,
+  .print-hidden {
+    display: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+  }
+
+  .content-shell {
+    padding: 0;
+  }
+}
+
+@page {
+  margin: 14mm;
+}

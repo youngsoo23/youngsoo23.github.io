@@ -1,0 +1,11 @@
+dist/
+.astro/
+public/
+package-lock.json
+screenshots/
+test-results/
+playwright-report/
+# 글과 프로젝트 본문은 작성한 그대로 둔다.
+src/content/
+AGENTS.md
+CLAUDE.md

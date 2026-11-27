@@ -1,126 +1,206 @@
 ---
-import { getCollection } from 'astro:content';
-import BaseLayout from '../layouts/BaseLayout.astro';
-import ListItem from '../components/ListItem.astro';
-import { intro, contact } from '../data/about';
-import { career, totalExperience } from '../data/career';
+import type { ImageMetadata } from 'astro';
+import Button from '@/components/common/Button.astro';
+import Card from '@/components/common/Card.astro';
+import Highlight from '@/components/common/Highlight.astro';
+import Icon from '@/components/common/Icon.astro';
+import InstantPhoto from '@/components/common/InstantPhoto.astro';
+import TechList from '@/components/common/TechList.astro';
+import SeasonalEffects from '@/components/effects/SeasonalEffects.astro';
+import Layout from '@/components/layout/Layout.astro';
+import Metric from '@/components/projects/Metric.astro';
+import { career, totalExperience } from '@/data/career';
+import { intro } from '@/data/about';
+import { getProjectGroups, getPublishedPosts, projectName, projectSubtitle } from '@/lib/content';
+import { getIcon } from '@/lib/icons';
+import { withRo } from '@/lib/korean';
+import { getMetric } from '@/lib/metric';
+import { withBase } from '@/lib/paths';
+import { formatPostDate, postSlug } from '@/lib/posts';
+import {
+  AUTHOR_NAME,
+  GITHUB_URL,
+  HERO_ROLE,
+  JOB_TITLE,
+  LINKEDIN_URL,
+  PROFILE_PHOTO,
+  PROFILE_PHOTO_ALT,
+  PROFILE_PHOTO_CAPTION,
+  SITE_DESCRIPTION,
+  TAGLINE,
+} from '@/lib/site';
 
-const allProjects = await getCollection('projects');
-const featured = allProjects
-  .filter((p) => p.data.featured && p.data.type !== 'personal')
-  .sort((a, b) => a.data.order - b.data.order)
-  .slice(0, 3);
+const { flagship, side } = await getProjectGroups();
+const featured = flagship.filter((p) => p.data.featured).slice(0, 3);
+const sideProjects = side.slice(0, 3);
+const recentPosts = (await getPublishedPosts()).slice(0, 3);
 
-const sideProjects = allProjects
-  .filter((p) => p.data.type === 'personal')
-  .sort((a, b) => a.data.order - b.data.order)
-  .slice(0, 3);
+const latest = career[0];
 
-const allPosts = await getCollection('posts');
-const recentPosts = allPosts
-  .filter((p) => !p.data.draft)
-  .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf())
-  .slice(0, 3);
+const photos = import.meta.glob<{ default: ImageMetadata }>('/src/assets/home/*.{jpg,jpeg,png,webp,avif}', {
+  eager: true,
+});
+const photo = PROFILE_PHOTO ? photos[`/src/assets/home/${PROFILE_PHOTO}`]?.default : undefined;
+if (PROFILE_PHOTO && !photo) {
+  throw new Error(`PROFILE_PHOTO "${PROFILE_PHOTO}" 파일이 src/assets/home/ 에 없습니다.`);
+}
 
-const current = career[0];
+const personSchema = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: AUTHOR_NAME,
+  jobTitle: JOB_TITLE,
+  url: new URL(withBase('/'), Astro.site).toString(),
+  sameAs: [GITHUB_URL, LINKEDIN_URL].filter(Boolean),
+}).replace(/</g, '\\u003c');
+
+const sectionHeading = 'mt-0 mb-8 text-[clamp(1.8rem,3.2vw,2.5rem)] leading-[1.25] tracking-[-0.02em]';
 ---
 
-<BaseLayout
-  title="홈"
-  description="Java·Spring 기반 7년차 백엔드 개발자 오영수의 포트폴리오"
->
-  <header>
-    <h1 class="text-3xl font-bold text-ink text-balance">오영수 | Backend Developer</h1>
-    <p class="mt-2 text-lg text-ink-soft">{intro.role}</p>
-    <p class="mt-4 max-w-md text-ink">{intro.mission}</p>
-    <div class="mt-7 flex flex-wrap gap-3">
-      <a
-        href="/resume"
-        class="rounded-sm bg-accent px-5 py-2.5 text-sm font-semibold text-accent-ink hover:opacity-90"
-      >
-        이력서 보기
-      </a>
-      <a
-        href="/projects"
-        class="rounded-sm border border-accent px-5 py-2.5 text-sm font-semibold text-accent hover:bg-accent hover:text-accent-ink"
-      >
-        프로젝트 보기
-      </a>
-      <a
-        href={contact.github}
-        target="_blank"
-        rel="noopener"
-        class="rounded-sm border border-line px-5 py-2.5 text-sm font-semibold text-ink-soft hover:border-ink-faint hover:text-ink"
-      >
-        GitHub
-      </a>
-    </div>
-  </header>
+<Layout title={`${AUTHOR_NAME} | ${HERO_ROLE}`} description={SITE_DESCRIPTION} canonicalPath="/">
+  <script type="application/ld+json" is:inline set:html={personSchema}></script>
+  <SeasonalEffects>
+    <main class="content-shell">
+      <section class="section w-full pt-15!" aria-labelledby="hero-heading">
+        <div class="flex items-center justify-between gap-12 max-md:flex-col max-md:items-start max-md:gap-10">
+          <div class="flex min-w-0 flex-col items-start gap-7">
+            <h1 id="hero-heading" class="m-0 text-[clamp(1.85rem,5vw,4.25rem)] leading-[1.2] tracking-[-0.02em]">
+              <span class="inline-block">{AUTHOR_NAME} |</span> <span class="inline-block">{HERO_ROLE}</span>
+            </h1>
+            <p class="m-0 max-w-[34ch] text-[clamp(1.15rem,2vw,1.45rem)] leading-[1.7] text-ink-soft">{TAGLINE}</p>
+            <div class="flex flex-wrap gap-4">
+              <Button href={withBase('/resume/')}>
+                이력서 보기
+                <Icon icon={getIcon('arrow-right')} />
+              </Button>
+              <Button href={withBase('/projects/')} variant="secondary">
+                프로젝트 보기
+              </Button>
+            </div>
+          </div>
+          {photo && (
+            <InstantPhoto
+              src={photo}
+              alt={PROFILE_PHOTO_ALT}
+              caption={PROFILE_PHOTO_CAPTION}
+              loading="eager"
+              class:list={['w-full', 'max-w-72', 'shrink-0', 'max-md:self-center']}
+            />
+          )}
+        </div>
+      </section>
 
-  <section class="mt-16">
-    <p class="font-mono text-xs uppercase tracking-wide text-ink-faint">Career</p>
-    <p class="mt-3 max-w-2xl text-[15px] leading-relaxed text-ink-soft">
-      Java·Spring 기반 백엔드 개발자로 <strong class="text-ink">{totalExperience}</strong> 동안
-      보험·결제 플랫폼의 레거시 리빌드와 운영 구조 개선을 담당했습니다. 현재는
-      <strong class="text-ink">{current.company}</strong>에서 {current.role}로 재직했습니다.
-    </p>
-    <a href="/career" class="mt-3 inline-block text-sm font-semibold text-accent hover:underline">
-      전체 경력 타임라인 보기 →
-    </a>
-  </section>
+      <section class="section w-full" aria-label="소개">
+        <Card>
+          <div class="about-prose">
+            <!-- prettier-ignore -->
+            <p>{intro.role}로 <Highlight bold handDrawn>{totalExperience}</Highlight> 동안 보험·결제 플랫폼의 <Highlight bold handDrawn>레거시 리빌드</Highlight>와 <Highlight bold handDrawn>운영 구조 개선</Highlight>을 담당했습니다.</p>
+            <!-- prettier-ignore -->
+            <p>{latest.end ? '최근에는' : '현재'} <strong>{latest.company}</strong>에서 {withRo(latest.role)} {latest.end ? '재직했습니다' : '재직 중입니다'}.</p>
+          </div>
+          <p class="mt-5 mb-0 flex flex-wrap gap-x-6 gap-y-1 font-heading text-[0.95rem] font-semibold">
+            <a class="text-accent underline underline-offset-4" href={withBase('/about/')}>
+              소개 더 보기
+            </a>
+            <a class="text-accent underline underline-offset-4" href={withBase('/career/')}>
+              경력 보기
+            </a>
+          </p>
+        </Card>
+      </section>
 
-  <section class="mt-16">
-    <p class="font-mono text-xs uppercase tracking-wide text-ink-faint">Featured Projects</p>
-    <h2 class="mt-2 text-xl font-bold text-ink">대표 프로젝트</h2>
-    <div class="mt-4">
-      {featured.map((p) => (
-        <ListItem
-          href={`/projects/${p.id}`}
-          title={p.data.title}
-          meta={`${p.data.company} · ${p.data.period}`}
-          summary={p.data.summary}
-        />
-      ))}
-    </div>
-    <a href="/projects" class="mt-6 inline-block text-sm font-semibold text-accent hover:underline">
-      모든 프로젝트 보기 →
-    </a>
-  </section>
+      <section class="section w-full" aria-labelledby="featured-heading">
+        <h2 id="featured-heading" class={sectionHeading}>
+          대표 프로젝트
+        </h2>
+        <ul class="m-0 grid list-none grid-cols-1 gap-6 p-0 lg:grid-cols-3">
+          {featured.map((project) => {
+            const metric = getMetric(project.data.metric);
+            return (
+              <Card as="li" hoverable class="relative flex min-w-0 flex-col gap-4">
+                <span class="inline-flex size-14 items-center justify-center border-2 border-ink bg-accent text-bg shadow-[3px_3px_0_0_var(--ink)]">
+                  <Icon icon={getIcon(project.data.icon ?? 'code')} class="size-7" />
+                </span>
+                <div>
+                  <h3 class="m-0 text-[1.5em] leading-[1.35] text-ink">
+                    <a class="after:absolute after:inset-0" href={withBase(`/projects/${project.id}/`)}>
+                      {projectName(project)}
+                    </a>
+                  </h3>
+                  <p class="mt-1 mb-0 text-[0.8rem] text-muted">
+                    {project.data.company} · <span class="font-mono">{project.data.period}</span>
+                  </p>
+                </div>
+                <p class="m-0 font-semibold leading-[1.6] text-ink">{projectSubtitle(project)}</p>
+                {metric && <Metric value={metric.value} label={metric.label} />}
+                <p class="m-0 text-[0.95rem] leading-[1.7] text-ink-soft">
+                  {project.data.card?.result ?? project.data.summary}
+                </p>
+                <div class="mt-auto pt-1">
+                  <TechList technologies={project.data.tags} label={`${projectName(project)} 기술 스택`} />
+                </div>
+              </Card>
+            );
+          })}
+        </ul>
+        <p class="mt-8 mb-0 font-heading font-semibold">
+          <a class="text-accent underline underline-offset-4" href={withBase('/projects/')}>
+            모든 프로젝트 보기
+          </a>
+        </p>
+      </section>
 
-  {sideProjects.length > 0 && (
-    <section class="mt-16">
-      <p class="font-mono text-xs uppercase tracking-wide text-ink-faint">Side Projects</p>
-      <h2 class="mt-2 text-xl font-bold text-ink">사이드 프로젝트</h2>
-      <div class="mt-4">
-        {sideProjects.map((p) => (
-          <ListItem
-            href={`/projects/${p.id}`}
-            title={p.data.title}
-            meta={`${p.data.company} · ${p.data.period}`}
-            summary={p.data.summary}
-            badge="개인 프로젝트"
-          />
-        ))}
+      <div class="section grid w-full gap-12 md:grid-cols-2">
+        {sideProjects.length > 0 && (
+          <section class="min-w-0" aria-labelledby="side-heading">
+            <h2 id="side-heading" class="mt-0 mb-4 text-[1.4rem]">
+              사이드 프로젝트
+            </h2>
+            <ul class="m-0 list-none border-t-2 border-ink p-0">
+              {sideProjects.map((project) => (
+                <li class="border-b-2 border-line py-4">
+                  <h3 class="m-0 text-[1rem] leading-[1.5]">
+                    <a href={withBase(`/projects/${project.id}/`)}>{project.data.title}</a>
+                  </h3>
+                  <p class="m-0 text-[0.8rem] text-muted">
+                    {project.data.company} · <span class="font-mono">{project.data.period}</span>
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+        <section class="min-w-0" aria-labelledby="posts-heading">
+          <h2 id="posts-heading" class="mt-0 mb-4 text-[1.4rem]">
+            최근 글
+          </h2>
+          <ul class="m-0 list-none border-t-2 border-ink p-0">
+            {recentPosts.map((post) => (
+              <li class="border-b-2 border-line py-4">
+                <h3 class="m-0 text-[1rem] leading-[1.5]">
+                  <a href={withBase(`/posts/${postSlug(post)}/`)}>{post.data.title}</a>
+                </h3>
+                <time class="font-mono text-[0.75rem] text-muted" datetime={post.data.date.toISOString()}>
+                  {formatPostDate(post.data.date)}
+                </time>
+              </li>
+            ))}
+          </ul>
+          <p class="mt-5 mb-0 font-heading text-[0.95rem] font-semibold">
+            <a class="text-accent underline underline-offset-4" href={withBase('/posts/')}>
+              모든 글 보기
+            </a>
+          </p>
+        </section>
       </div>
-    </section>
-  )}
+    </main>
+  </SeasonalEffects>
+</Layout>
 
-  <section class="mt-16">
-    <p class="font-mono text-xs uppercase tracking-wide text-ink-faint">Recent Posts</p>
-    <h2 class="mt-2 text-xl font-bold text-ink">최근 기술 글</h2>
-    {recentPosts.length > 0 ? (
-      <div class="mt-4">
-        {recentPosts.map((post) => (
-          <ListItem
-            href={`/posts/${post.id}`}
-            title={post.data.title}
-            meta={post.data.publishDate.toISOString().slice(0, 10)}
-            summary={post.data.summary}
-          />
-        ))}
-      </div>
-    ) : (
-      <p class="mt-4 text-sm text-ink-faint">곧 첫 글을 공개할 예정입니다.</p>
-    )}
-  </section>
-</BaseLayout>
+<style>
+  @reference "@/styles/global.css";
+
+  .about-prose p {
+    @apply mb-[1rem] font-heading text-[1.2rem] leading-[1.9] text-ink last:mb-0;
+  }
+</style>

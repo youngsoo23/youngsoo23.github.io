@@ -1,0 +1,49 @@
+---
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import Layout from '@/components/layout/Layout.astro';
+import Lede from '@/components/common/Lede.astro';
+import PageHero from '@/components/common/PageHero.astro';
+import PostCard from '@/components/posts/PostCard.astro';
+import { getPublishedPosts } from '@/lib/content';
+import { getAllTags, slugifyTag } from '@/lib/tags';
+import { SITE_NAME } from '@/lib/site';
+
+export async function getStaticPaths() {
+  const published = await getPublishedPosts();
+
+  return getAllTags(await getCollection('blog')).map(({ slug, name }) => ({
+    params: { tag: slug },
+    props: {
+      name,
+      posts: published.filter((post) => post.data.tags.some((tag) => slugifyTag(tag) === slug)),
+    },
+  }));
+}
+
+interface Props {
+  name: string;
+  posts: CollectionEntry<'blog'>[];
+}
+
+const { name, posts } = Astro.props;
+const slug = Astro.params.tag!;
+---
+
+<Layout title={`#${name} — ${SITE_NAME}`} description={`"${name}" 태그가 붙은 글`} canonicalPath={`/tags/${slug}/`}>
+  <main class="content-shell">
+    <PageHero title={`# ${name}`}>
+      <Lede>{posts.length === 0 ? '아직 글이 없습니다.' : `"${name}" 태그가 붙은 글 ${posts.length}개`}</Lede>
+    </PageHero>
+
+    {posts.length > 0 && (
+      <section class="section w-full" aria-label="글 목록">
+        <div class="grid gap-8">
+          {posts.map((post) => (
+            <PostCard post={post} />
+          ))}
+        </div>
+      </section>
+    )}
+  </main>
+</Layout>

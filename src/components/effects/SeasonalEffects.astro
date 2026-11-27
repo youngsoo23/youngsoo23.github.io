@@ -1,0 +1,22 @@
+---
+import FallingLeaves from './FallingLeaves.astro';
+import FallingPetals from './FallingPetals.astro';
+import FallingSnow from './FallingSnow.astro';
+import HeatShimmer from './HeatShimmer.astro';
+import Sunlight from './Sunlight.astro';
+import { SEASONAL_EFFECTS_ENABLED } from '@/lib/site';
+---
+
+{SEASONAL_EFFECTS_ENABLED ? (
+  <>
+    <FallingLeaves />
+    <FallingSnow />
+    <FallingPetals />
+    <Sunlight />
+    <HeatShimmer>
+      <slot />
+    </HeatShimmer>
+  </>
+) : (
+  <slot />
+)}

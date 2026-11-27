@@ -1,0 +1,35 @@
+---
+import ProjectCard from './ProjectCard.astro';
+import { getProjectGroups, projectName, projectSubtitle } from '@/lib/content';
+import { getMetric } from '@/lib/metric';
+import { withBase } from '@/lib/paths';
+
+const { flagship, side } = await getProjectGroups();
+const groups = [
+  { id: 'flagship', title: '대표 프로젝트', projects: flagship, columns: '' },
+  { id: 'side', title: '사이드 프로젝트', projects: side, columns: 'md:grid-cols-2' },
+].filter((group) => group.projects.length > 0);
+---
+
+{groups.map((group) => (
+  <section class="section w-full" aria-labelledby={`${group.id}-heading`}>
+    <h2 id={`${group.id}-heading`} class="mt-0 mb-6 text-[1.6rem]">
+      {group.title}
+    </h2>
+    <div class:list={['grid gap-8', group.columns]}>
+      {group.projects.map((project) => (
+        <ProjectCard
+          name={projectName(project)}
+          description={project.data.card ? projectSubtitle(project) : project.data.summary}
+          technologies={project.data.tags}
+          links={project.data.links}
+          href={withBase(`/projects/${project.id}/`)}
+          company={project.data.company}
+          period={project.data.period}
+          steps={project.data.card}
+          metric={getMetric(project.data.metric)}
+        />
+      ))}
+    </div>
+  </section>
+))}

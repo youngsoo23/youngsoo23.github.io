@@ -7,6 +7,16 @@ tags: ["Java", "Spring Boot 3.3.x", "JPA", "QueryDSL", "Liquibase", "Redis", "Do
 featured: true
 type: "flagship"
 order: 1
+name: "Toggle 3.0"
+icon: "refresh"
+card:
+  problem: "레거시 PHP로 신규 기능 개발이 어려웠고, 운영 작업을 하루 10~20건씩 개발자가 수작업으로 처리했습니다."
+  action: "Spring Boot로 전면 재구축하며 운영 백오피스를 단독 설계하고, 결제·인증·알림을 별도 서비스로 분리했습니다."
+  result: "운영 수작업을 없애고, 외부 연동의 장애·비용 리스크를 격리했습니다."
+# 대표 성과 지표 1개. 두 값이 TODO이거나 비어 있으면 화면에 표시되지 않습니다.
+metric:
+  value: "TODO" # 크게 강조할 숫자
+  label: "TODO" # 숫자에 대한 설명
 ---
 
 ## 배경
